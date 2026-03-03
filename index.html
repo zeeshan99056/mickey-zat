@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>Global Chat 🌍</h2>
+                <div class="header-info">
+                    <span>Connected users: <span id="user-count">0</span></span>
+                </div>
+            </div>
+            
+            <div class="messages" id="messages">
+                <!-- Messages will appear here -->
+            </div>
+            
+            <div class="input-area">
+                <button id="emoji-btn" class="emoji-btn">😊</button>
+                <div id="emoji-picker" class="emoji-picker"></div>
+                <input type="text" id="message-input" placeholder="Type your message..." maxlength="500">
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+        
+        <div class="users-sidebar">
+            <div class="sidebar-header">
+                <h3>Active Users</h3>
+                <button id="refresh-users" class="refresh-btn" title="Refresh users list">↻</button>
+            </div>
+            <div class="active-users" id="active-users-list">
+                <!-- Active users will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>
