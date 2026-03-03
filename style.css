@@ -17,7 +17,6 @@ body {
     background-color: #1a1a1a;
 }
 
-/* Chat Container */
 .chat-container {
     flex: 1;
     display: flex;
@@ -44,7 +43,6 @@ body {
     color: #888;
 }
 
-/* Messages Area */
 .messages {
     flex: 1;
     padding: 20px;
@@ -95,11 +93,6 @@ body {
     line-height: 1.4;
 }
 
-.own-message .message-content {
-    color: #e0e0e0;
-}
-
-/* Notifications */
 .notification {
     text-align: center;
     color: #888;
@@ -113,7 +106,6 @@ body {
     align-items: center;
 }
 
-/* Input Area */
 .input-area {
     padding: 20px;
     background-color: #2d2d2d;
@@ -153,7 +145,6 @@ body {
     background-color: #008c9e;
 }
 
-/* Emoji Picker */
 .emoji-btn {
     padding: 12px;
     background-color: #383838;
@@ -190,7 +181,6 @@ body {
     background-color: #404040;
 }
 
-/* Users Sidebar */
 .users-sidebar {
     width: 250px;
     background-color: #2d2d2d;
@@ -248,7 +238,6 @@ body {
     border-radius: 50%;
 }
 
-/* Popup */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -313,7 +302,6 @@ body {
     background-color: #008c9e;
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -331,7 +319,6 @@ body {
     background: #505050;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .users-sidebar {
         display: none;
