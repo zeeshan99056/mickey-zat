@@ -5,7 +5,6 @@ let messagesContainer;
 let activeUsersList;
 let emojiPicker;
 
-// Show popup if no username
 function showUsernamePopup() {
     if (!username) {
         const popup = document.createElement('div');
@@ -40,9 +39,7 @@ function showUsernamePopup() {
     }
 }
 
-// Initialize WebSocket connection
 function initializeChat() {
-    // Use appropriate WebSocket URL
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}`;
     
@@ -50,7 +47,6 @@ function initializeChat() {
     
     ws.onopen = () => {
         console.log('Connected to server');
-        // Send join message
         ws.send(JSON.stringify({
             type: 'join',
             username: username
@@ -67,13 +63,8 @@ function initializeChat() {
         addNotification('Disconnected from server. Trying to reconnect...');
         setTimeout(initializeChat, 3000);
     };
-    
-    ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-    };
 }
 
-// Handle incoming messages
 function handleIncomingMessage(data) {
     switch(data.type) {
         case 'message':
@@ -84,38 +75,45 @@ function handleIncomingMessage(data) {
             break;
         case 'users':
             updateActiveUsers(data.users);
+            document.getElementById('user-count').textContent = data.users.length;
             break;
     }
 }
 
-// Add message to chat
 function addMessage(username, content, timestamp, isOwn = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isOwn ? 'own-message' : ''}`;
     messageDiv.innerHTML = `
         <div class="message-header">
-            <span class="username">${username}</span>
+            <span class="username">${escapeHtml(username)}</span>
             <span class="timestamp">${timestamp}</span>
         </div>
-        <div class="message-content">${content}</div>
+        <div class="message-content">${escapeHtml(content)}</div>
     `;
     messagesContainer.appendChild(messageDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Add notification
 function addNotification(content, timestamp) {
     const notificationDiv = document.createElement('div');
     notificationDiv.className = 'notification';
     notificationDiv.innerHTML = `
-        <span>${content}</span>
+        <span>${escapeHtml(content)}</span>
         <span class="timestamp">${timestamp}</span>
     `;
     messagesContainer.appendChild(notificationDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Update active users list
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 function updateActiveUsers(users) {
     activeUsersList.innerHTML = '';
     users.forEach(user => {
@@ -123,16 +121,15 @@ function updateActiveUsers(users) {
         userDiv.className = 'active-user';
         userDiv.innerHTML = `
             <span class="status-dot"></span>
-            <span>${user}</span>
+            <span>${escapeHtml(user)}</span>
         `;
         activeUsersList.appendChild(userDiv);
     });
 }
 
-// Send message
 function sendMessage() {
     const content = messageInput.value.trim();
-    if (content && ws.readyState === WebSocket.OPEN) {
+    if (content && ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({
             type: 'message',
             content: content
@@ -141,12 +138,10 @@ function sendMessage() {
     }
 }
 
-// Initialize emoji picker
 function initEmojiPicker() {
     const emojiButton = document.getElementById('emoji-btn');
     const emojiContainer = document.getElementById('emoji-picker');
     
-    // Common emojis
     const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '✨', '🌟', '💯', '✅', 
                     '😎', '🤔', '😢', '😡', '👋', '🙏', '💪', '🍕', '⚽', '🎮'];
     
@@ -166,7 +161,6 @@ function initEmojiPicker() {
         emojiContainer.style.display = emojiContainer.style.display === 'none' ? 'grid' : 'none';
     });
     
-    // Close emoji picker when clicking outside
     document.addEventListener('click', (e) => {
         if (!emojiButton.contains(e.target) && !emojiContainer.contains(e.target)) {
             emojiContainer.style.display = 'none';
@@ -174,16 +168,13 @@ function initEmojiPicker() {
     });
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     messagesContainer = document.getElementById('messages');
     messageInput = document.getElementById('message-input');
     activeUsersList = document.getElementById('active-users-list');
     
-    // Send button
     document.getElementById('send-btn').addEventListener('click', sendMessage);
     
-    // Enter key to send
     messageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -191,16 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Refresh users button
     document.getElementById('refresh-users').addEventListener('click', () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ type: 'getUsers' }));
         }
     });
     
-    // Initialize emoji picker
     initEmojiPicker();
-    
-    // Show popup and initialize
     showUsernamePopup();
 });
